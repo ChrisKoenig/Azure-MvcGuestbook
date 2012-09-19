@@ -1,0 +1,87 @@
+﻿<div class="general">
+
+    <div class="title">
+        <h1>Windows Azure GuestBook</h1>
+    </div>
+
+    <!-- form for entering new items -->
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true)
+        <div class="inputSection">
+            <dl>
+                <dt>
+                    <label for="username">Name:</label>
+                </dt>
+                <dd>
+                    <input type="text" id="username" name="username" class="field" />
+                </dd>
+                <dt>
+                    <label for="message">Message:</label>
+                </dt>
+                <dd>
+                    <textarea id="message" name="message" class="field"></textarea>
+                </dd>
+                <dt>
+                    <label for="inputFile">Photo:</label>
+                </dt>
+                <dd>
+                    <input type="file" name="inputFile" id="inputFile" />
+                </dd>
+            </dl>
+            <div class="inputSignSection">
+                <input type="image" src="~/Content/sign.png" alt="Sign GuestBook" />
+            </div>
+        </div>
+
+    }
+
+    <!-- display area for existing items -->
+    <div id="results">
+    </div>
+
+    <!-- scripts hook -->
+    @section scripts {
+
+        <!-- functions -->
+        <script type="text/javascript">
+
+            $(document).ready(doWork);
+
+            function doWork() {
+                var URL = '/Home/Entries';
+                $.getJSON(URL, function (data) {
+                    $.each(data, function (index, value) {
+                        $("#guestBookItemTemplate").tmpl(value).appendTo("#results");
+                    });
+                });
+                // setTimeout(doWork, 5000);
+            }
+        </script>
+
+        <!-- templates -->
+        <script id="guestBookItemTemplate" type="text/html">
+            <div class="signature">
+                <div class="signatureImage">
+                    <a href="${PhotoUrl}" target="_blank">
+                        <img src="${ThumbnailUrl} " alt="${GuestName}" />
+                    </a>
+                </div>
+                <div class="signatureDescription">
+                    <div class="signatureName">
+                        ${GuestName}
+                    </div>
+                    <div class="signatureSays">
+                        says
+                    </div>
+                    <div class="signatureDate">
+                        ${Timestamp}
+                    </div>
+                    <div class="signatureMessage">
+                        ${Message}
+                    </div>
+                </div>
+            </div>
+        </script>
+    }
+</div>
