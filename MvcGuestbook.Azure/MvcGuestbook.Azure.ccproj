@@ -45,6 +45,14 @@
       <RoleName>MvcGuestbook</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
+    <ProjectReference Include="..\MvcGuestbook_WorkerRole\MvcGuestbook_WorkerRole.csproj">
+      <Name>MvcGuestbook_WorkerRole</Name>
+      <Project>{373e6704-e72a-4cae-91c6-57e3c5a98378}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>MvcGuestbook_WorkerRole</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

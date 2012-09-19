@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace MvcGuestbook.Models
+namespace MvcGuestbook_Data
 {
     public class GuestBookEntry : TableServiceEntity
     {

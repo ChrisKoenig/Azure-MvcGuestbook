@@ -141,10 +141,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\GuestBookDataContext.cs" />
-    <Compile Include="Models\GuestBookDataSource.cs" />
-    <Compile Include="Models\GuestBookEntry.cs" />
-    <Compile Include="Models\GuestbookQueueMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebRole.cs" />
   </ItemGroup>
@@ -239,9 +235,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MvcGuestbook_Data\MvcGuestbook_Data.csproj">
+      <Project>{389defc6-2111-4ddb-a1b6-5d95f670c1f5}</Project>
+      <Name>MvcGuestbook_Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

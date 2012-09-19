@@ -4,11 +4,11 @@ using System.Web;
 using System.Linq;
 using System.Web.Mvc;
 using System.Diagnostics;
-using MvcGuestbook.Models;
 using Microsoft.WindowsAzure;
 using System.Collections.Generic;
 using Microsoft.WindowsAzure.StorageClient;
 using Newtonsoft.Json;
+using MvcGuestbook_Data;
 
 namespace MvcGuestbook.Controllers
 {
