@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcGuestbook", "MvcGuestbook\MvcGuestbook.csproj", "{C78389FB-56BF-4640-A607-C277C402A9E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcGuestbook_Web", "MvcGuestbook\MvcGuestbook_Web.csproj", "{C78389FB-56BF-4640-A607-C277C402A9E6}"
 EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "MvcGuestbook.Azure", "MvcGuestbook.Azure\MvcGuestbook.Azure.ccproj", "{5602E4CD-E820-43F4-A65F-EB25BE96034D}"
 EndProject

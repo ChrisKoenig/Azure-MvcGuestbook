@@ -1,8 +1,5 @@
 ﻿using Microsoft.WindowsAzure.StorageClient;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace MvcGuestbook_Data
 {

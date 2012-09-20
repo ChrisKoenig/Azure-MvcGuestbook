@@ -1,8 +1,7 @@
-﻿using Microsoft.WindowsAzure.StorageClient;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Web;
+using System.Collections.Generic;
+using Microsoft.WindowsAzure.StorageClient;
 
 namespace MvcGuestbook_Data
 {

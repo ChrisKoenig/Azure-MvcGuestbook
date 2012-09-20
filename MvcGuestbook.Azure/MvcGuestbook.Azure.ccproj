@@ -37,12 +37,12 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MvcGuestbook\MvcGuestbook.csproj">
-      <Name>MvcGuestbook</Name>
+    <ProjectReference Include="..\MvcGuestbook\MvcGuestbook_Web.csproj">
+      <Name>MvcGuestbook_Web</Name>
       <Project>{c78389fb-56bf-4640-a607-c277c402a9e6}</Project>
       <Private>True</Private>
       <RoleType>Web</RoleType>
-      <RoleName>MvcGuestbook</RoleName>
+      <RoleName>MvcGuestbook_Web</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
     <ProjectReference Include="..\MvcGuestbook_WorkerRole\MvcGuestbook_WorkerRole.csproj">

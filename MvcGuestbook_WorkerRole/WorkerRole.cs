@@ -56,7 +56,7 @@ namespace MvcGuestbook_WorkerRole
                             outputBlob.SetProperties();
 
                             // update the entry in table storage to point to the thumbnail
-                            GuestBookDataSource ds = new GuestBookDataSource();
+                            GuestBookService ds = new GuestBookService("DataConnectionString");
                             ds.UpdateImageThumbnail(partitionKey, rowKey, thumbnailBlobUri);
 
                             // remove message from queue

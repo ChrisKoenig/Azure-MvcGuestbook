@@ -37,8 +37,9 @@
     }
 
     <!-- display area for existing items -->
-    <div id="results">
-    </div>
+    <h2>Last Updated: <strong><span id="updateTimestamp"></span></strong></h2>
+    <div id="statusText"></div>
+    <div id="results"></div>
 
     <!-- scripts hook -->
     @section scripts {
@@ -46,18 +47,30 @@
         <!-- functions -->
         <script type="text/javascript">
 
-            $(document).ready(doWork);
+            $(document).ready(function () {
+                doWork();
+                setInterval("doWork()", 10000);
+            });
 
             function doWork() {
+                var currentTime = new Date();
+                $("#updateTimestamp").text(currentTime.toString("yyyy-MM-dd hh:nn:ss"));
+                $("#statusText").text("running...");
+                $("#results").empty();
                 var URL = '/Home/Entries';
                 $.getJSON(URL, function (data) {
-                    $("#results div").remove();
-                    alert("Processing");
+                    $("#statusText").text("got data...");
                     $.each(data, function (index, value) {
-                        $("#guestBookItemTemplate").tmpl(value).appendTo("#results");
+                        $("#guestBookItemTemplate").tmpl(value, {
+                            formatAsDate: function () {
+                                var jsonDate = this.data.Timestamp;
+                                var realDate = new Date(parseInt(jsonDate.substr(6)));
+                                return realDate.toString('dddd, MMMM ,yyyy');
+                            }
+                        }).appendTo("#results");
                     });
+                    $("#statusText").text("waiting...");
                 });
-                setTimeout(doWork, 5000);
             }
         </script>
 
@@ -77,7 +90,7 @@
                         says
                     </div>
                     <div class="signatureDate">
-                        ${Timestamp}
+                        ${$item.formatAsDate()}
                     </div>
                     <div class="signatureMessage">
                         ${Message}
