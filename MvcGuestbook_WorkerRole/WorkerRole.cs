@@ -1,25 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
-using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.StorageClient;
 using System.IO;
-using MvcGuestbook_Data;
+using System.Net;
+using System.Linq;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using MvcGuestbook_Data;
+using System.Diagnostics;
+using Microsoft.WindowsAzure;
 using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
+using System.Collections.Generic;
+using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.ServiceRuntime;
+using Newtonsoft.Json;
 
 namespace MvcGuestbook_WorkerRole
 {
     public class WorkerRole : RoleEntryPoint
     {
         private CloudQueue queue;
-        private CloudBlobContainer container;
+        private CloudBlobContainer blobContainer;
 
         public override void Run()
         {
@@ -34,16 +33,17 @@ namespace MvcGuestbook_WorkerRole
                     if (msg != null)
                     {
                         // parse message retrieved from queue
-                        var messageParts = msg.AsString.Split(new char[] { ',' });
-                        var imageBlobUri = messageParts[0];
-                        var partitionKey = messageParts[1];
-                        var rowkey = messageParts[2];
+                        var json = msg.AsString;
+                        var data = JsonConvert.DeserializeObject<GuestbookQueueMessage>(json);
+                        var imageBlobUri = data.BlobUri.ToString();
+                        var partitionKey = data.PartitionKey;
+                        var rowKey = data.RowKey;
                         Trace.TraceInformation("Processing image in blob '{0}'.", imageBlobUri);
 
                         string thumbnailBlobUri = System.Text.RegularExpressions.Regex.Replace(imageBlobUri, "([^\\.]+)(\\.[^\\.]+)?$", "$1-thumb$2");
 
-                        CloudBlob inputBlob = this.container.GetBlobReference(imageBlobUri);
-                        CloudBlob outputBlob = this.container.GetBlobReference(thumbnailBlobUri);
+                        CloudBlob inputBlob = this.blobContainer.GetBlobReference(imageBlobUri);
+                        CloudBlob outputBlob = this.blobContainer.GetBlobReference(thumbnailBlobUri);
 
                         using (BlobStream input = inputBlob.OpenRead())
                         using (BlobStream output = outputBlob.OpenWrite())
@@ -57,7 +57,7 @@ namespace MvcGuestbook_WorkerRole
 
                             // update the entry in table storage to point to the thumbnail
                             GuestBookDataSource ds = new GuestBookDataSource();
-                            ds.UpdateImageThumbnail(partitionKey, rowkey, thumbnailBlobUri);
+                            ds.UpdateImageThumbnail(partitionKey, rowKey, thumbnailBlobUri);
 
                             // remove message from queue
                             this.queue.DeleteMessage(msg);
@@ -88,15 +88,16 @@ namespace MvcGuestbook_WorkerRole
             {
                 configSetter(RoleEnvironment.GetConfigurationSettingValue(configName));
             });
+            
             var storageAccount = CloudStorageAccount.FromConfigurationSetting("DataConnectionString");
 
             // initialize blob storage
-            CloudBlobClient blobStorage = storageAccount.CreateCloudBlobClient();
-            this.container = blobStorage.GetContainerReference("guestbookpics");
+            var blobStorage = storageAccount.CreateCloudBlobClient();
+            blobContainer = blobStorage.GetContainerReference("guestbookpics");
 
             // initialize queue storage
-            CloudQueueClient queueStorage = storageAccount.CreateCloudQueueClient();
-            this.queue = queueStorage.GetQueueReference("guestthumbs");
+            var queueStorage = storageAccount.CreateCloudQueueClient();
+            queue = queueStorage.GetQueueReference("guestbookthumbs");
 
             Trace.TraceInformation("Creating container and queue...");
 
@@ -106,10 +107,10 @@ namespace MvcGuestbook_WorkerRole
                 try
                 {
                     // create the blob container and allow public access
-                    this.container.CreateIfNotExist();
-                    var permissions = this.container.GetPermissions();
+                    this.blobContainer.CreateIfNotExist();
+                    var permissions = this.blobContainer.GetPermissions();
                     permissions.PublicAccess = BlobContainerPublicAccessType.Container;
-                    this.container.SetPermissions(permissions);
+                    this.blobContainer.SetPermissions(permissions);
 
                     // create the message queue(s)
                     this.queue.CreateIfNotExist();

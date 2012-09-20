@@ -51,11 +51,13 @@
             function doWork() {
                 var URL = '/Home/Entries';
                 $.getJSON(URL, function (data) {
+                    $("#results div").remove();
+                    alert("Processing");
                     $.each(data, function (index, value) {
                         $("#guestBookItemTemplate").tmpl(value).appendTo("#results");
                     });
                 });
-                // setTimeout(doWork, 5000);
+                setTimeout(doWork, 5000);
             }
         </script>
 
